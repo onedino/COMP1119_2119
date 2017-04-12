@@ -49,18 +49,22 @@ void Graph::addEdge(int aa, int bb, int ww) {
 }
 
 int Graph::minDis(int dis[], bool inspectV[] ) {
-	int min = INT_MAX, minindex;
+	int min = INT_MAX, minIndex;
 
 	for(int v = 0; v < vertex; v++) {
 		if(inspectV[v] == false && dis[v] <= min) {
 			min = dis[v];
-			minindex = v;
+			minIndex = v;
 		}
 	}
+	return minIndex;
 }
 
-void Graph::printShortestPath(int list[]){
-
+void Graph::printShortestPath(int dis[]){
+	cout <<"Vertex	Distance from Source" << endl;
+	for (int i = 0; i<vertex; i++) {
+		cout << i << "\t" << dis[i] << endl;
+	}
 }
 
 void Graph::shortestPath(int src) {
