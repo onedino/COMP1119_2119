@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
+//asd
 
 #define INT_MAX 100000000
 
@@ -49,6 +50,7 @@ void Graph::addEdge(int aa, int bb, int ww) {
 
 void Graph::shortestPath(int src) {
 //	dijkstra algo
+//	need weed
 	int dist[vertex];
 
 	bool sptSet[vertex];
