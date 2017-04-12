@@ -19,8 +19,6 @@
 #include <assert.h>
 //asd
 
-#define INT_MAX 100000000
-
 using namespace std;
 
 class Graph {
@@ -31,7 +29,9 @@ public:
 	int index(int x, int y);
 	Graph(int e);
 	void addEdge(int aa, int bb, int ww);
-	void shortestPath(int uu);
+	void shortestPath(int src);
+	int minDis(int dis[], bool inspectV[]);
+	void printShortestPath(int dis[]);
 };
 
 Graph::index(int x, int y) {
@@ -48,20 +48,39 @@ void Graph::addEdge(int aa, int bb, int ww) {
 	edge++;
 }
 
+int Graph::minDis(int dis[], bool inspectV[] ) {
+	int min = INT_MAX, minindex;
+
+	for(int v = 0; v < vertex; v++) {
+		if(inspectV[v] == false && dis[v] <= min) {
+			min = dis[v];
+			minindex = v;
+		}
+	}
+}
+
+void Graph::printShortestPath(int list[]){
+
+}
+
 void Graph::shortestPath(int src) {
 //	dijkstra algo
-//	need weed
-	int dist[vertex];
+	int dis[vertex];
 
-	bool sptSet[vertex];
+	bool inspectV[vertex];
 
 	for(int i = 0; i < vertex; vertex++) {
-		dist[i] = INT_MAX;
-		sptSet[i] = false;
+		dis[i] = INT_MAX;
+		inspectV[i] = false;
 	}
 	for(int count = 0; count < vertex - 1;count++){
-
+		int u = minDis(dis,inspectV);
+		inspectV[u] = true;
+		for (int v = 0; v < vertex; v++)
+			if (!inspectV[v] && matrix[index(u,v)] && dis[u] != INT_MAX && dis[u]+matrix[index(u,v)] < dis[v])
+			dis[v] = dis[u] + matrix[index(u,v)];
 	}
+	printShortestPath(dis);
 }
 
 void NearestDriver(){
