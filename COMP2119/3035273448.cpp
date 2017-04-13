@@ -28,7 +28,7 @@ public:
 	int *matrix;
 	int index(int x, int y);
 	Graph(int e);
-	void addEdge(int aa, int bb, int ww);
+	void addEdge(int V1, int V2, int cost);
 	void shortestPath(int src);
 	int minDis(int dis[], bool inspectV[]);
 	void printShortestPath(int dis[]);
@@ -43,8 +43,8 @@ Graph::Graph(int v) {
 	matrix = new int[v*v];
 }
 
-void Graph::addEdge(int aa, int bb, int ww) {
-	matrix[index(aa,bb)] = ww;
+void Graph::addEdge(int V1, int V2, int cost) {
+	matrix[index(V1,V2)] = cost;
 	edge++;
 }
 
@@ -62,9 +62,15 @@ int Graph::minDis(int dis[], bool inspectV[] ) {
 
 void Graph::printShortestPath(int dis[]){
 	cout <<"Vertex	Distance from Source" << endl;
+	int shortestPath = INT_MAX;
+	int shortestV;
 	for (int i = 0; i<vertex; i++) {
-		cout << i << "\t" << dis[i] << endl;
+		if(shortestPath < dis[i]) {
+			shortestPath = dis[i];
+			shortestV = i;
+		}
 	}
+	cout << shortestV << "\t" << shortestPath << endl;
 }
 
 void Graph::shortestPath(int src) {
