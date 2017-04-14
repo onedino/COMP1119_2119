@@ -26,6 +26,7 @@ public:
 	int edge;
 	int vertex;
 	int *matrix;
+	int *dis;
 	int index(int x, int y);
 	Graph(int e);
 	void addEdge(int V1, int V2, int cost);
@@ -41,6 +42,7 @@ Graph::index(int x, int y) {
 Graph::Graph(int v) {
 	vertex = v;
 	matrix = new int[v*v];
+	dis = new int[v];
 }
 
 void Graph::addEdge(int V1, int V2, int cost) {
@@ -75,7 +77,6 @@ void Graph::printShortestPath(int dis[]){
 
 void Graph::shortestPath(int src) {
 //	dijkstra algo
-	int dis[vertex];
 
 	bool inspectV[vertex];
 
@@ -115,7 +116,14 @@ void NearestDriver(){
     int bestv = -1;
     int l;
     cin >> l;
+    int closestCar = INT_MAX;
     for(int i = 0; i < l; i++){
+    	int pos;
+    	cin >> pos;
+    	if(g.dis[pos] < closestCar) {
+    		closestCar = g.dis[pos];
+    		bestv = i;
+    	}
         // scan over every car to get the final answer
     }
 
