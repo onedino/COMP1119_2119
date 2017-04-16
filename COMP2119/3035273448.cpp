@@ -9,14 +9,15 @@
 //============================================================================
 // Name        : 3035273448.cpp
 // Author      : Lau Yin Heng Henry
-// Version     :
-// Copyright   : Please stop abusing programmers
+// Version     : 1.0
+// Copyright   :
 // Description : 2119 programming assignment
 //============================================================================
 
 #include <iostream>
 #include <string>
 #include <assert.h>
+#include <limits.h>
 //asd
 
 using namespace std;
@@ -35,7 +36,7 @@ public:
 	void printShortestPath(int dis[]);
 };
 
-Graph::index(int x, int y) {
+int Graph::index(int x, int y) {
 	return (x + vertex*y);
 }
 
