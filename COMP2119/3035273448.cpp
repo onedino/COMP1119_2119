@@ -28,6 +28,7 @@ public:
 	int vertex;
 	int *matrix;
 	int *dis;
+	bool *inspectV;
 	int index(int x, int y);
 	Graph(int e);
 	void addEdge(int V1, int V2, int cost);
@@ -44,17 +45,23 @@ Graph::Graph(int v) {
 	vertex = v;
 	matrix = new int[v*v];
 	dis = new int[v];
+	inspectV = new bool[v];
+//	cout << "setting data" << endl;
+	for(int i = 0; i < v; v++) {
+		dis[i] = INT_MAX;
+		inspectV[i] = false;
+//		cout << "setting up" << endl;
+	}
 }
-
 void Graph::addEdge(int V1, int V2, int cost) {
 	matrix[index(V1,V2)] = cost;
 	edge++;
 }
-
 int Graph::minDis(int dis[], bool inspectV[] ) {
 	int min = INT_MAX, minIndex;
 
 	for(int v = 0; v < vertex; v++) {
+//		cout << v <<endl;
 		if(inspectV[v] == false && dis[v] <= min) {
 			min = dis[v];
 			minIndex = v;
@@ -63,36 +70,38 @@ int Graph::minDis(int dis[], bool inspectV[] ) {
 	return minIndex;
 }
 
-void Graph::printShortestPath(int dis[]){
-	cout <<"Vertex	Distance from Source" << endl;
-	int shortestPath = INT_MAX;
-	int shortestV;
-	for (int i = 0; i<vertex; i++) {
-		if(shortestPath < dis[i]) {
-			shortestPath = dis[i];
-			shortestV = i;
-		}
-	}
-	cout << shortestV << "\t" << shortestPath << endl;
-}
+//void Graph::printShortestPath(int dis[]){
+//	cout <<"Vertex Distance from Source" << endl;
+//	int shortestPath = INT_MAX;
+//	int shortestV;
+//	for (int i = 0; i<vertex; i++) {
+//		if(shortestPath < dis[i]) {
+//			shortestPath = dis[i];
+//			shortestV = i;
+//		}
+//	}
+//	cout << shortestV << "\t" << shortestPath << endl;
+//}
 
 void Graph::shortestPath(int src) {
 //	dijkstra algo
-
-	bool inspectV[vertex];
-
-	for(int i = 0; i < vertex; vertex++) {
-		dis[i] = INT_MAX;
-		inspectV[i] = false;
-	}
+//	for(int i = 0; i < vertex; vertex++) {
+//		dis[i] = INT_MAX;
+//		inspectV[i] = false;
+//		cout << "setting up" << endl;
+//	}
+//	cout << "stage 1" << endl;
+	dis[src] = 0;
 	for(int count = 0; count < vertex - 1;count++){
 		int u = minDis(dis,inspectV);
 		inspectV[u] = true;
 		for (int v = 0; v < vertex; v++)
-			if (!inspectV[v] && matrix[index(u,v)] && dis[u] != INT_MAX && dis[u]+matrix[index(u,v)] < dis[v])
+			if (!inspectV[v] && matrix[index(u,v)] > 0 &&
+			dis[u] != INT_MAX && dis[u]+matrix[index(u,v)] < dis[v])
 			dis[v] = dis[u] + matrix[index(u,v)];
 	}
-	printShortestPath(dis);
+//	cout << "stage 2" << endl;
+//	printShortestPath(dis);
 }
 
 void NearestDriver(){
@@ -107,8 +116,8 @@ void NearestDriver(){
         cin >> a >> b >> w;
 
         g.addEdge(a, b, w);
+//        cout << a << " " << b << " " << g.matrix[g.index(a,b)] << endl;
     }
-
     int u;
     cin >> u;
     // implement your own shortest path
