@@ -74,7 +74,7 @@ void Graph::addEdge(int V1, int V2, int cost) {
 	edge++;
 }
 int Graph::minDis() {
-	int min = INT_MAX;
+	int min = MAT_MAX;
 	int minIndex;
 
 	for(int v = 0; v < vertex; v++) {
@@ -88,7 +88,7 @@ int Graph::minDis() {
 }
 //void Graph::printShortestPath(int dis[]){
 //	cout <<"Vertex Distance from Source" << endl;
-//	int shortestPath = INT_MAX;
+//	int shortestPath = MAT_MAX;
 //	int shortestV;
 //	for (int i = 0; i<vertex; i++) {
 //		if(shortestPath < dis[i]) {
@@ -104,7 +104,7 @@ void Graph::shortestPath(int src) {
 	dis = new int[vertex];
 	inspectV = new bool[vertex];
 	for(int i = 0; i < vertex; i++) {
-		dis[i] = INT_MAX;
+		dis[i] = MAT_MAX;
 		inspectV[i] = false;
 //		cout << "setting up" << endl;
 	}
@@ -115,12 +115,10 @@ void Graph::shortestPath(int src) {
 		int u = minDis();
 		if(u==src){break;}
 		inspectV[u] = true;
-		if(dis[u]==INT_MAX){continue;}
+		if(dis[u]==MAT_MAX){continue;}
 		for (int v = 0; v < vertex; v++) {
-			//
 			if (!inspectV[v] && matrix[index(u,v)] > 0 &&
-			dis[u] != INT_MAX && dis[u]+matrix[index(u,v)] < dis[v]) {
-			//
+			dis[u] != MAT_MAX && dis[u]+matrix[index(u,v)] < dis[v]) {
 				dis[v] = dis[u] + matrix[index(u,v)];
 //				cout << "crap" << endl;
 			}
@@ -174,7 +172,7 @@ void NearestDriver(){
     int bestv = -1;
     int l;
     cin >> l;
-    int closestCar = INT_MAX;
+    int closestCar = MAT_MAX;
     for(int i = 0; i < l; i++){
     	int pos;
     	cin >> pos;
@@ -221,10 +219,66 @@ void QueryPrice(){
 
 void Diameter(){
     //your code starts here
+	int n, m;
+	cin >> n >> m;
+	Graph g(n);
+	g.allDis = new int[g.vertex * g.vertex];
+	for(int i = 0; i < m; i++){
+		int a, b, w;
+		cin >> a >> b >> w;
+		g.addEdge(a, b, w);
+	}
+	g.shortestPathAll();
+	int worstDis = 0;
+	for(int i = 0; i < g.vertex; i++) {
+		for(int j = 0;j < g.vertex; j++) {
+			int dis = g.allDis[g.index(i,j)];
+			if(dis == MAT_MAX) {
+				cout << "NOT_CONNECTED" << endl; return;
+			}
+			if(dis > worstDis)
+				worstDis = dis;
+		}
+	}
+	cout << worstDis << endl;
 }
 
 void DiameterApproximation(){
     //your code starts here
+	int n, m;
+	cin >> n >> m;
+	Graph g(n);
+//	g.allDis = new int[g.vertex * g.vertex];
+	for(int i = 0; i < m; i++){
+		int a, b, w;
+		cin >> a >> b >> w;
+		g.addEdge(a, b, w);
+	}
+	g.shortestPath(0);
+	int worstNode = 0;
+	int worstDis = 0;
+	for(int i = 0; i<g.vertex; i++) {
+		cout << g.dis[i] << endl;
+		if(g.dis[i] > worstDis && g.dis[i] != MAT_MAX) {
+			worstDis = g.dis[i];
+			worstNode = i;
+		}
+	}
+//	cout << worstDis;
+	int interimNode = worstNode;
+	g.shortestPath(interimNode);
+	worstDis = 0;
+	for(int i = 0;i < g.vertex ; i++) {
+		if(g.dis[i] > worstDis) {
+			worstDis = g.dis[i];
+			worstNode = i;
+		}
+	}
+	if(worstDis == MAT_MAX)
+		cout << "Not connected" <<endl;
+	else
+		cout << worstDis << endl;
+	return;
 }
 
 int main(){
@@ -243,8 +297,5 @@ int main(){
         cout << "wrong input file!" << endl;
         assert(0);
     }
-
     return 0;
 }
-
-
