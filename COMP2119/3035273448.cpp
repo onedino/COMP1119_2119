@@ -42,6 +42,7 @@ public:
 	int minDis();
 	void printShortestPath(int dis[]);
 	void shortestPathAll();
+	void shortestPathApprox(int src);
 };
 
 int Graph::index(int x, int y) {
@@ -121,10 +122,43 @@ void Graph::shortestPath(int src) {
 			dis[u] != MAT_MAX && dis[u]+matrix[index(u,v)] < dis[v]) {
 				dis[v] = dis[u] + matrix[index(u,v)];
 //				cout << "crap" << endl;
+//				cout << dis[v] << endl;
 			}
 		}
 //		cout << "crap" << endl;
 	}
+	return;
+//	cout << "stage 2" << endl;
+//	printShortestPath(dis);
+}
+void Graph::shortestPathApprox(int src) {
+//	dijkstra algo
+	dis = new int[vertex];
+	inspectV = new bool[vertex];
+	for(int i = 0; i < vertex; i++) {
+		dis[i] = MAT_MAX;
+		inspectV[i] = false;
+//		cout << "setting up" << endl;
+	}
+//	cout << "stage 1" << endl;
+	dis[src] = 0;
+
+	for(int count = 0; count < vertex - 1;count++){
+		int u = minDis();
+//		if(u==src){break;}
+		inspectV[u] = true;
+		if(dis[u]==MAT_MAX){continue;}
+		for (int v = 0; v < vertex; v++) {
+			if (!inspectV[v] && matrix[index(u,v)] > 0 &&
+			dis[u] != MAT_MAX && dis[u]+matrix[index(u,v)] < dis[v]) {
+				dis[v] = dis[u] + matrix[index(u,v)];
+//				cout << "crap" << endl;
+//				cout << dis[v] << endl;
+			}
+		}
+//		cout << "crap" << endl;
+	}
+	return;
 //	cout << "stage 2" << endl;
 //	printShortestPath(dis);
 }
@@ -168,6 +202,7 @@ void NearestDriver(){
     cin >> u;
     // implement your own shortest path
     g.shortestPath(u);
+
 
     int bestv = -1;
     int l;
@@ -234,7 +269,7 @@ void Diameter(){
 		for(int j = 0;j < g.vertex; j++) {
 			int dis = g.allDis[g.index(i,j)];
 			if(dis == MAT_MAX) {
-				cout << "NOT_CONNECTED" << endl; return;
+				cout << "INF" << endl; return;
 			}
 			if(dis > worstDis)
 				worstDis = dis;
@@ -245,37 +280,56 @@ void Diameter(){
 
 void DiameterApproximation(){
     //your code starts here
-	int n, m;
+	int n, m;	//vertex and edges
 	cin >> n >> m;
 	Graph g(n);
+	cout << "Graph created" <<endl;
 //	g.allDis = new int[g.vertex * g.vertex];
 	for(int i = 0; i < m; i++){
 		int a, b, w;
 		cin >> a >> b >> w;
 		g.addEdge(a, b, w);
 	}
-	g.shortestPath(0);
+//	g.allDis = new int[n*n];
+//	cout << "edge added" << endl;
+	g.shortestPathApprox(0);
+//	for(int i = 0; i < g.vertex; i++) {
+//		cout << g.dis[i] << endl;
+//	}
+//	g.shortestPathAll();
+//	cout << "shortest path sorted" <<endl;
 	int worstNode = 0;
 	int worstDis = 0;
 	for(int i = 0; i<g.vertex; i++) {
-		cout << g.dis[i] << endl;
+//		cout << g.dis[i] << endl;
+//		if(g.allDis[g.index(0,i)] > worstDis && g.allDis[g.index(0,i)] != MAT_MAX) {
+//			worstDis = g.allDis[g.index(0,i)];
+//			worstNode = i;
+//		}
 		if(g.dis[i] > worstDis && g.dis[i] != MAT_MAX) {
 			worstDis = g.dis[i];
 			worstNode = i;
 		}
 	}
+//	cout << "finish interrim" << endl;
 //	cout << worstDis;
 	int interimNode = worstNode;
-	g.shortestPath(interimNode);
+	g.shortestPathApprox(interimNode);
 	worstDis = 0;
 	for(int i = 0;i < g.vertex ; i++) {
-		if(g.dis[i] > worstDis) {
+//		if(g.allDis[g.index(interimNode, i)] > worstDis) {
+//			worstDis = g.allDis[g.index(interimNode, i)];
+//			worstNode = i;
+//		}
+		if(g.dis[i] > worstDis && g.dis[i] != MAT_MAX) {
 			worstDis = g.dis[i];
 			worstNode = i;
 		}
 	}
-	if(worstDis == MAT_MAX)
-		cout << "Not connected" <<endl;
+
+	if(worstDis == MAT_MAX) {
+		cout << "INF" <<endl;
+	}
 	else
 		cout << worstDis << endl;
 	return;
